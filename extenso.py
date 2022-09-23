@@ -85,7 +85,6 @@ class ValorPorExtenso:
 
       extenso_tmp = self.__extenso_grupo(grupo)
 
-
       if extenso_tmp:
 
         if int(grupo) > 1:
@@ -112,6 +111,7 @@ class ValorPorExtenso:
   def __str__(self):
     return self.get()
 
+  
 
 # ----------------------
 #  main
