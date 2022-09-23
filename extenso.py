@@ -9,15 +9,12 @@ Author: Celso Roberto Vitorino
 class ValorPorExtenso:
 
   NOMENCLATURA = (
-    ('', 'cem', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 
-     'seiscentos', 'setecentos', 'oitocentos', 'novecentos'),
+    ('', 'cem', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'),
     ('', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'),
     ('', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'),
   )
 
-  DEZ_DEZENOVE =  ('dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 
-     'dezoito', 'dezenove')
-
+  DEZ_DEZENOVE =  ('dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove')
   
   CONECTOR = 'e'
   CONECTOR_MOEDA = 'de'
@@ -79,7 +76,6 @@ class ValorPorExtenso:
     return extenso
 
 
-
   def get(self):
 
     extenso = []
@@ -117,7 +113,9 @@ class ValorPorExtenso:
     return self.get()
 
 
-# --- main
+# ----------------------
+#  main
+# ----------------------
 
 valor = 8_743_102_015.13
 
