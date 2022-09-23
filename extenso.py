@@ -1,9 +1,9 @@
 """
-
+-----------------------------------------------
 Class : ValorPorExtenso v1.0
 Date  : September 23, 2022
 Author: Celso Roberto Vitorino
-
+-----------------------------------------------
 """
 
 class ValorPorExtenso:
