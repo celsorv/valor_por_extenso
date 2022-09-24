@@ -22,12 +22,13 @@ for idx, valor in enumerate(valores):
 """
 Output:
 
-8,746,102,015.13 - Oito Bilhões, Setecentos e Quarenta e Seis Milhões, Cento e Dois Mil, Quinze Reais e Treze Centavos
+8,746,102,015.13 - Oito Bilhões e Setecentos e Quarenta e Seis Milhões e Cento e Dois Mil e Quinze Reais e Treze Centavos
     5,000,000.99 - CINCO MILHÕES DE REAIS E NOVENTA E NOVE CENTAVOS
-       12,105.00 - Doze Mil, Cento e Cinco Reais
+       12,105.00 - Doze Mil e Cento e Cinco Reais
 1,000,000,000.00 - Um Bilhão de Reais
             0.01 - Um Centavo
             0.28 - vinte e oito centavos
-    1,001,001.01 - UM MILHÃO, UM MIL, UM REAL E UM CENTAVO
+   12,104,100.35 - DOZE MILHÕES E CENTO E QUATRO MIL E CEM REAIS E TRINTA E CINCO CENTAVOS
+
 """
 ```
