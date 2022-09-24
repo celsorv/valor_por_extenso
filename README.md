@@ -7,7 +7,7 @@ _Python class to write a currency value in full form_
 
 extenso = ValorPorExtenso()
 
-valores = (8_746_102_015.13, 5_000_000.99, 12_105.00, 1_000_000_000.00, 0.01, 0.28, 1_001_001.01)
+valores = (8_746_102_015.13, 5_000_000.99, 12_105.00, 1_000_000_000.00, 0.01, 0.28, 12_104_100.35)
 estilos  = [None] * len(valores)
 
 estilos[1] = ExtensoEstilo.UPPERCASE
