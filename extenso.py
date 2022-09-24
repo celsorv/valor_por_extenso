@@ -24,8 +24,8 @@ class ValorPorExtenso:
 
   DEZ_DEZENOVE =  ('Dez', 'Onze', 'Doze', 'Treze', 'Quatorze', 'Quinze', 'Dezesseis', 'Dezessete', 'Dezoito', 'Dezenove')
   
-  CONECTOR = ' e '
-  CONECTOR_MOEDA = ' de'
+  CONECTOR = 'e'
+  CONECTOR_MOEDA = 'de'
   CENTO = ('Cem', 'Cento')
   EXCLUDENTE_CONECTOR_MOEDA = 'Mil'
 
@@ -75,31 +75,28 @@ class ValorPorExtenso:
 
       if extenso_tmp:
         if int(grupo) > 1:
-          extenso_tmp.append(f' {ValorPorExtenso.CLASSE_P[idx]}')
+          extenso_tmp.append(ValorPorExtenso.CLASSE_P[idx])
         else:
-          extenso_tmp.append(f' {ValorPorExtenso.CLASSE_S[idx]}')
+          extenso_tmp.append(ValorPorExtenso.CLASSE_S[idx])
 
         if extenso:
-          if idx == len(valor_str) - 1:
-            extenso.append([ValorPorExtenso.CONECTOR])
-          else:
-            extenso.append([', '])
+          extenso.append([ValorPorExtenso.CONECTOR])
         extenso.append(extenso_tmp)
 
       elif is_grupo_moeda and extenso:
         if extenso[-1][-1] != ValorPorExtenso.EXCLUDENTE_CONECTOR_MOEDA:
           extenso_tmp.append(ValorPorExtenso.CONECTOR_MOEDA)
 
-        extenso_tmp.append(f' {ValorPorExtenso.CLASSE_P[idx]}')
+        extenso_tmp.append(ValorPorExtenso.CLASSE_P[idx])
         extenso.append(extenso_tmp)
 
     if self.uppercase:
-      return ''.join(map(str.upper, [e for v in extenso for e in v]))
+      return ' '.join(map(str.upper, [e for v in extenso for e in v]))
 
     elif not self.capitalize:
-      return ''.join(map(str.lower, [e for v in extenso for e in v]))
+      return ' '.join(map(str.lower, [e for v in extenso for e in v]))
 
-    return ''.join(map(str, [e for v in extenso for e in v]))
+    return ' '.join(map(str, [e for v in extenso for e in v]))
     
     
   def __extenso_grupo(self, numero_str):
@@ -138,11 +135,12 @@ class ValorPorExtenso:
     return f'{parte_inteira:015,d}'.split(',') + [f'0{parte_decimal}']
 
 
+
 # --- utilizando a classe
 
 extenso = ValorPorExtenso()
 
-valores = (8_746_102_015.13, 5_000_000.99, 12_105.00, 1_000_000_000.00, 0.01, 0.28, 1_001_001.01)
+valores = (8_746_102_015.13, 5_000_000.99, 12_105.00, 1_000_000_000.00, 0.01, 0.28, 12_104_100.35)
 estilo  = [None] * len(valores)
 
 estilo[1] = ExtensoEstilo.UPPERCASE
