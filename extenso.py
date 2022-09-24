@@ -1,58 +1,109 @@
 """
------------------------------------------------
+--------------------------------------
 Class : ValorPorExtenso v1.0
 Date  : September 23, 2022
 Author: Celso Roberto Vitorino
------------------------------------------------
+--------------------------------------
 """
+
+from enum import Enum
+
+class ExtensoEstilo(Enum):
+  DEFAULT = 1
+  CAPITALIZE = 2
+  UPPERCASE = 3
+  LOWERCASE = 4
 
 class ValorPorExtenso:
 
   NOMENCLATURA = (
-    ('', 'cem', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'),
-    ('', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'),
-    ('', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'),
+    ('', 'Cem', 'Duzentos', 'Trezentos', 'Quatrocentos', 'Quinhentos', 'Seiscentos', 'Setecentos', 'Oitocentos', 'Novecentos'),
+    ('', '', 'Vinte', 'Trinta', 'Quarenta', 'Cinquenta', 'Sessenta', 'Setenta', 'Oitenta', 'Noventa'),
+    ('', 'Um', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis', 'Sete', 'Oito', 'Nove'),
   )
 
-  DEZ_DEZENOVE =  ('dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove')
+  DEZ_DEZENOVE =  ('Dez', 'Onze', 'Doze', 'Treze', 'Quatorze', 'Quinze', 'Dezesseis', 'Dezessete', 'Dezoito', 'Dezenove')
   
-  CONECTOR = 'e'
-  CONECTOR_MOEDA = 'de'
-  CENTO = ('cem', 'cento')
-  EXCLUDENTE_CONECTOR_MOEDA = 'mil'
+  CONECTOR = ' e '
+  CONECTOR_MOEDA = ' de'
+  CENTO = ('Cem', 'Cento')
+  EXCLUDENTE_CONECTOR_MOEDA = 'Mil'
 
-  AGRUPA_S = ('bilhão', 'milhão', 'mil', 'real', 'centavo')
-  AGRUPA_P = ('bilhões', 'milhões', 'mil', 'reais', 'centavos')
+  CLASSE_S = ('Bilhão', 'Milhão', 'Mil', 'Real', 'Centavo')
+  CLASSE_P = ('Bilhões', 'Milhões', 'Mil', 'Reais', 'Centavos')
   INDEX_MOEDA = 3
 
 
-  def __init__(self, valor = None):
-    if valor:
-      self.setValor(valor)
-    else:
-      self.valor = None
-      self.valor_otm = None
-
-
-  def __separa_valor(self):
+  def __init__(self, estilo = None):
+      self.setEstilo(estilo)
     
-    parte_inteira = int(self.valor)
-    parte_decimal = f'{self.valor:018,.2f}'.split('.')[1]
 
-    self.valor_otm = f'{parte_inteira:015,d}'.split(',') + [f'0{parte_decimal}']
+  def setEstilo(self, estilo):
+    if estilo == ExtensoEstilo.UPPERCASE:
+      self.setUppercase(True)
+    elif estilo == ExtensoEstilo.CAPITALIZE:
+      self.setCapitalize(True)
+    elif estilo == ExtensoEstilo.LOWERCASE:
+      self.setLowercase(False)
+    else:
+      self.setCapitalize(True)
 
 
-  def setValor(self, valor):
+  def setCapitalize(self, capitalize):
+    self.capitalize = capitalize
+    self.uppercase = False
 
-    if valor > 990_999_999_999.99:
-      raise ValueError('Valor limitado a 990.999.999.999,99')
 
-    self.valor = valor
-    self.__separa_valor()
+  def setUppercase(self, uppercase):
+    self.uppercase = uppercase
+    self.capitalize = False
 
+    
+  def setLowercase(self, lowercase):
+    self.capitalize = False
+    self.uppercase = False
+
+
+  def get(self, valor):
+    valor_str = ValorPorExtenso.__valor_str(valor)
+
+    extenso = []
+
+    for idx, grupo in enumerate(valor_str):
+      is_grupo_moeda = (idx == ValorPorExtenso.INDEX_MOEDA)
+
+      extenso_tmp = self.__extenso_grupo(grupo)
+
+      if extenso_tmp:
+        if int(grupo) > 1:
+          extenso_tmp.append(f' {ValorPorExtenso.CLASSE_P[idx]}')
+        else:
+          extenso_tmp.append(f' {ValorPorExtenso.CLASSE_S[idx]}')
+
+        if extenso:
+          if idx+1 == len(valor_str):
+            extenso.append([ValorPorExtenso.CONECTOR])
+          else:
+            extenso.append([', '])
+        extenso.append(extenso_tmp)
+
+      elif is_grupo_moeda and extenso:
+        if extenso[-1][-1] != ValorPorExtenso.EXCLUDENTE_CONECTOR_MOEDA:
+          extenso_tmp.append(ValorPorExtenso.CONECTOR_MOEDA)
+
+        extenso_tmp.append(f' {ValorPorExtenso.CLASSE_P[idx]}')
+        extenso.append(extenso_tmp)
+
+    if self.uppercase:
+      return ''.join(map(str.upper, [e for v in extenso for e in v]))
+
+    elif not self.capitalize:
+      return ''.join(map(str.lower, [e for v in extenso for e in v]))
+
+    return ''.join(map(str, [e for v in extenso for e in v]))
+    
     
   def __extenso_grupo(self, numero_str):
-
     extenso = []
 
     for idx, algarismo in enumerate(numero_str):
@@ -76,49 +127,31 @@ class ValorPorExtenso:
     return extenso
 
 
-  def get(self):
+  def __valor_str(valor):
+    if not (valor and isinstance(valor, (int, float))):
+      raise ValueError('Parâmetro inválido para extenso')
+    elif valor > 990_999_999_999.99:
+      raise ValueError('Valor excede o limite de 990.999.999.999,99')
 
-    extenso = []
+    parte_inteira = int(valor)
+    parte_decimal = f'{valor:018,.2f}'.split('.')[1]
 
-    for idx, grupo in enumerate(self.valor_otm):
-      is_grupo_moeda = (idx == ValorPorExtenso.INDEX_MOEDA)
-
-      extenso_tmp = self.__extenso_grupo(grupo)
-
-      if extenso_tmp:
-
-        if int(grupo) > 1:
-          extenso_tmp.append(ValorPorExtenso.AGRUPA_P[idx])
-        else:
-          extenso_tmp.append(ValorPorExtenso.AGRUPA_S[idx])
-
-        if extenso:
-          extenso.append([ValorPorExtenso.CONECTOR])
-
-        extenso.append(extenso_tmp)
-
-      elif is_grupo_moeda and extenso:
-        if extenso[-1][-1] != ValorPorExtenso.EXCLUDENTE_CONECTOR_MOEDA:
-          extenso_tmp.append(ValorPorExtenso.CONECTOR_MOEDA)
-        extenso_tmp.append(ValorPorExtenso.AGRUPA_P[idx])
-        extenso.append(extenso_tmp)
-
-    extenso = ' '.join(map(str, [e for v in extenso for e in v]))
-
-    return extenso
+    return f'{parte_inteira:015,d}'.split(',') + [f'0{parte_decimal}']
 
 
-  def __str__(self):
-    return self.get()
 
-  
-
-# ----------------------
-#  main
-# ----------------------
-
-valor = 8_743_102_015.13
+# --- utilizando a classe
 
 extenso = ValorPorExtenso()
-extenso.setValor(valor)
-print(extenso)
+
+valores = (8_746_102_015.13, 5_000_000.99, 12_105.00, 1_000_000_000.00, 0.01, 0.28, 1_001_001.01)
+estilo  = [None] * len(valores)
+
+estilo[1] = ExtensoEstilo.UPPERCASE
+estilo[3] = ExtensoEstilo.DEFAULT
+estilo[5] = ExtensoEstilo.LOWERCASE
+estilo[-1] = ExtensoEstilo.UPPERCASE
+
+for idx, valor in enumerate(valores):
+  extenso.setEstilo(estilo[idx])
+  print(f'{valor:18,.2f} ->', extenso.get(valor))
