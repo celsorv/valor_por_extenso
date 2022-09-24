@@ -150,4 +150,4 @@ estilos[-1] = ExtensoEstilo.UPPERCASE
 
 for idx, valor in enumerate(valores):
   extenso.setEstilo(estilos[idx])
-  print(f'{valor:18,.2f} ->', extenso.get(valor))
+  print(f'{valor:18,.2f} -', extenso.get(valor))
