@@ -58,7 +58,6 @@ class ValorPorExtenso:
     self.uppercase = uppercase
     self.capitalize = False
 
-    
   def setLowercase(self, lowercase):
     self.capitalize = False
     self.uppercase = False
@@ -81,7 +80,7 @@ class ValorPorExtenso:
           extenso_tmp.append(f' {ValorPorExtenso.CLASSE_S[idx]}')
 
         if extenso:
-          if idx+1 == len(valor_str):
+          if idx == len(valor_str) - 1:
             extenso.append([ValorPorExtenso.CONECTOR])
           else:
             extenso.append([', '])
@@ -139,19 +138,18 @@ class ValorPorExtenso:
     return f'{parte_inteira:015,d}'.split(',') + [f'0{parte_decimal}']
 
 
-
 # --- utilizando a classe
 
 extenso = ValorPorExtenso()
 
 valores = (8_746_102_015.13, 5_000_000.99, 12_105.00, 1_000_000_000.00, 0.01, 0.28, 1_001_001.01)
-estilos  = [None] * len(valores)
+estilo  = [None] * len(valores)
 
-estilos[1] = ExtensoEstilo.UPPERCASE
-estilos[3] = ExtensoEstilo.DEFAULT
-estilos[5] = ExtensoEstilo.LOWERCASE
-estilos[-1] = ExtensoEstilo.UPPERCASE
+estilo[1] = ExtensoEstilo.UPPERCASE
+estilo[3] = ExtensoEstilo.DEFAULT
+estilo[5] = ExtensoEstilo.LOWERCASE
+estilo[-1] = ExtensoEstilo.UPPERCASE
 
 for idx, valor in enumerate(valores):
-  extenso.setEstilo(estilos[idx])
+  extenso.setEstilo(estilo[idx])
   print(f'{valor:18,.2f} ->', extenso.get(valor))
