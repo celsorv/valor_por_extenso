@@ -1,5 +1,6 @@
 # ValorPorExtenso
-## Classe em Python que produz o extenso de um valor monetário.
+## Classe em Python que produz o extenso de um valor monetário
+_Python class to write a currency value in full form_
 
 
 ```python
