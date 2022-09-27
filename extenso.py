@@ -108,7 +108,7 @@ class ValorPorExtenso:
       numerico = int(algarismo)
       is_dez_a_dezenove = (idx == 1 and numerico == 1)
 
-      if idx and extenso:
+      if extenso:
         if extenso[-1] == ValorPorExtenso.CENTO[0]:
           extenso[-1] = ValorPorExtenso.CENTO[1]
         extenso.append(ValorPorExtenso.CONECTOR)
