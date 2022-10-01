@@ -44,6 +44,10 @@ class ValorPorExtenso:
 
         return extenso
 
+    
+    def setValor(self, valor):
+        self.__valor_agrupado(valor)
+
 
     def __extenso_grupo(self, valor, indice_grupo):
         if valor == '000': return ''
@@ -75,10 +79,6 @@ class ValorPorExtenso:
             extenso += f' {ValorPorExtenso._CLASSES[indice_grupo][posicao]}'
 
         return extenso
-
-
-    def setValor(self, valor):
-        self.__valor_agrupado(valor)
 
 
     def __init__(self):
