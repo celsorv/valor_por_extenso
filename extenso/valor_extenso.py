@@ -14,7 +14,7 @@ class ValorPorExtenso:
         extenso = ''
         usou_conector = False
 
-        for indice, grupo in enumerate(self.valor_ctl[1:], 1):
+        for indice, grupo in enumerate(self.__valor_ctl[1:], 1):
             if grupo == '000': continue
 
             posicao = ValorPorExtenso._PLURAL if int(grupo) > 1 else ValorPorExtenso._SINGULAR
@@ -28,47 +28,50 @@ class ValorPorExtenso:
 
             extenso = extenso_tmp + extenso
 
-        if self.valor_ctl[1] == '000' and self.inteiros: # moeda
+        if self.__valor_ctl[1] == '000' and self.__inteiros: # moeda
             posicao = ValorPorExtenso._PLURAL
 
-            if self.valor_ctl[2] == '000':
+            if self.__valor_ctl[2] == '000':
                 moeda = f' {ValorPorExtenso._CONECTOR_MOEDA} {ValorPorExtenso._CLASSES[1][posicao]}'
             else:
                 moeda = f' {ValorPorExtenso._CLASSES[1][posicao]}'
             extenso += moeda
 
-        if self.valor_ctl[0] != '000': # centavos
+        if self.__valor_ctl[0] != '000': # centavos
             if extenso:
                 extenso += f' {ValorPorExtenso._CONECTOR} '
-            extenso += self.__extenso_grupo(self.valor_ctl[0], 0)
+            extenso += self.__extenso_grupo(self.__valor_ctl[0], 0)
 
         return extenso
 
 
     def __extenso_grupo(self, valor, indice_grupo):
-        if valor == '000': return ''
 
-        if valor == '100':
-            extenso = ValorPorExtenso._CEM
-            extenso += f' {ValorPorExtenso._CLASSES[indice_grupo][ValorPorExtenso._PLURAL]}'
-            return extenso
+        grupo_plural = int(valor) > 1 or (indice_grupo == 1 and self.__pluralizar)
 
-        grupo_plural = int(valor) > 1 or (indice_grupo == 1 and self.pluralizar)
-        extenso = ''
+        match valor:
+            case '000':
+                extenso = ''
 
-        for indice in range(len(valor)):
-            digito = valor[indice]
-            if digito == '0': continue
+            case '100':
+                extenso = ValorPorExtenso._CEM
 
-            if extenso: extenso += f' {ValorPorExtenso._CONECTOR} '
+            case _:
+                extenso = ''
 
-            if indice == 1 and digito == '1': # dezena de 10 a 19
-                posicao = int(valor[indice:]) - 10
-                extenso += ValorPorExtenso._NUMEROS[3][posicao]
-                break
+                for indice in range(len(valor)):
+                    digito = valor[indice]
+                    if digito == '0': continue
 
-            posicao = int(digito)
-            extenso += ValorPorExtenso._NUMEROS[indice][posicao]
+                    if extenso: extenso += f' {ValorPorExtenso._CONECTOR} '
+
+                    if indice == 1 and digito == '1': # dezena de 10 a 19
+                        posicao = int(valor[indice:]) - 10
+                        extenso += ValorPorExtenso._NUMEROS[3][posicao]
+                        break
+
+                    posicao = int(digito)
+                    extenso += ValorPorExtenso._NUMEROS[indice][posicao]
 
         if extenso:
             posicao = ValorPorExtenso._PLURAL if grupo_plural else ValorPorExtenso._SINGULAR
@@ -82,11 +85,11 @@ class ValorPorExtenso:
 
 
     def __init__(self):
-        self.pluralizar = None
-        self.decimais = None
-        self.inteiros = None
-        self.valor = None
-        self.valor_ctl = None
+        self.__pluralizar = None
+        self.__decimais = None
+        self.__inteiros = None
+        self.__valor = None
+        self.__valor_ctl = None
 
 
     def __valor_agrupado(self, valor):
@@ -95,11 +98,11 @@ class ValorPorExtenso:
         elif valor > 990_999_999_999_999_999_999_999:
             raise ValueError('Valor excede o limite de 990.999.999.999.999.999.999')
 
-        self.valor = valor
-        self.inteiros = int(valor)
-        self.decimais = f'{valor:031,.2f}'.split('.')[1]
-        self.valor_ctl = list(reversed(f'{self.inteiros:031,d}'.split(',') + [f'0{self.decimais}']))
-        self.pluralizar = self.inteiros > 1
+        self.__valor = valor
+        self.__inteiros = int(valor)
+        self.__decimais = f'{valor:031,.2f}'.split('.')[1]
+        self.__valor_ctl = list(reversed(f'{self.__inteiros:031,d}'.split(',') + [f'0{self.__decimais}']))
+        self.__pluralizar = self.__inteiros > 1
 
 
     _SINGULAR = 0
