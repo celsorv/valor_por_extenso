@@ -1,16 +1,21 @@
 """
---------------------------------------
-Class : ValorPorExtenso v1.0
-Date  : October 01, 2022
-Author: Celso Roberto Vitorino
---------------------------------------
-"""
+Gera o extenso para um valor monetário
 
+## Author: Celso R Vitorino
+## Date  : October 01, 2022
+"""
 from decimal import Decimal
 
 class ValorPorExtenso:
 
-    def get(self):
+    def get(self) -> str:
+        """
+        Método que retorna o valor por extenso
+        Args:
+            não há
+        Return:
+            extenso: extenso do valor 
+        """
         extenso = ''
         usou_conector = False
 
@@ -18,7 +23,7 @@ class ValorPorExtenso:
             if grupo == '000': continue
 
             posicao = ValorPorExtenso._PLURAL if int(grupo) > 1 else ValorPorExtenso._SINGULAR
-            extenso_tmp = self.__extenso_grupo(grupo, indice)
+            extenso_tmp = self.__extenso_classe(grupo, indice)
             if extenso:
                 if not usou_conector:
                     extenso_tmp += f' {ValorPorExtenso._CONECTOR} '
@@ -40,22 +45,34 @@ class ValorPorExtenso:
         if self.__valor_ctl[0] != '000': # centavos
             if extenso:
                 extenso += f' {ValorPorExtenso._CONECTOR} '
-            extenso += self.__extenso_grupo(self.__valor_ctl[0], 0)
+            extenso += self.__extenso_classe(self.__valor_ctl[0], 0)
 
         return extenso
 
 
-    def __extenso_grupo(self, valor, indice_grupo):
+    def setValor(self, valor: float | Decimal) -> None:
+        """
+        Define o valor cujo extenso é desejado
+        Args:
+            valor: valor como float ou Decimal
+        Return:
+            não há
+        """
+        self.__valor_agrupado(valor)
 
-        grupo_plural = int(valor) > 1 or (indice_grupo == 1 and self.__pluralizar)
+
+# ---------------
+# Private Methods
+# ---------------
+
+    def __extenso_classe(self, valor: str, indice_classe: int) -> str:
+        classe_plural = int(valor) > 1 or (indice_classe == 1 and self.__pluralizar)
 
         match valor:
             case '000':
                 extenso = ''
-
             case '100':
                 extenso = ValorPorExtenso._CEM
-
             case _:
                 extenso = ''
 
@@ -74,17 +91,13 @@ class ValorPorExtenso:
                     extenso += ValorPorExtenso._NUMEROS[indice][posicao]
 
         if extenso:
-            posicao = ValorPorExtenso._PLURAL if grupo_plural else ValorPorExtenso._SINGULAR
-            extenso += f' {ValorPorExtenso._CLASSES[indice_grupo][posicao]}'
+            posicao = ValorPorExtenso._PLURAL if classe_plural else ValorPorExtenso._SINGULAR
+            extenso += f' {ValorPorExtenso._CLASSES[indice_classe][posicao]}'
 
         return extenso
 
 
-    def setValor(self, valor):
-        self.__valor_agrupado(valor)
-
-
-    def __init__(self):
+    def __init__(self) -> None:
         self.__pluralizar = None
         self.__decimais = None
         self.__inteiros = None
@@ -92,7 +105,7 @@ class ValorPorExtenso:
         self.__valor_ctl = None
 
 
-    def __valor_agrupado(self, valor):
+    def __valor_agrupado(self, valor: (float, Decimal)) -> None:
         if not (valor and isinstance(valor, (int, float, Decimal))):
             raise ValueError('Parâmetro inválido para extenso')
         elif valor > 990_999_999_999_999_999_999_999:
@@ -104,6 +117,10 @@ class ValorPorExtenso:
         self.__valor_ctl = list(reversed(f'{self.__inteiros:031,d}'.split(',') + [f'0{self.__decimais}']))
         self.__pluralizar = self.__inteiros > 1
 
+
+# ----------------
+# Class properties
+# ----------------
 
     _SINGULAR = 0
     _PLURAL = 1
