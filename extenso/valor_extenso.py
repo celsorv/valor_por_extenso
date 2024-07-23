@@ -108,8 +108,8 @@ class ValorPorExtenso:
     def __valor_agrupado(self, valor: (float, Decimal)) -> None:
         if not (valor and isinstance(valor, (int, float, Decimal))):
             raise ValueError('Parâmetro inválido para extenso')
-        elif valor > 990_999_999_999_999_999_999_999:
-            raise ValueError('Valor excede o limite de 990.999.999.999.999.999.999')
+        # elif valor > 990_999_999_999_999_999_999_999:
+        #     raise ValueError('Valor excede o limite de 990.999.999.999.999.999.999')
 
         self.__valor = valor
         self.__inteiros = int(valor)
@@ -141,9 +141,44 @@ class ValorPorExtenso:
         ('Trilhão', 'Trilhões', True),
         ('Quatrilhão', 'Quatrilhões', True),
         ('Quintilhão', 'Quintilhões', True),
+        ('Sextilhão', 'Sextilhões', True),
+        ('Septilhão', 'Septilhões', True),
+        ('Octilhão', 'Octilhões', True),
+        ('Nonilhão', 'Nonilhões', True),
+        ('Decilhão', 'Decilhões', True),
+        ('Undecilhão', 'Undecilhões', True),
+        ('Duodecilhão', 'Duodecilhões', True),
     )
 
     _CEM = 'Cem'
 
     _CONECTOR = 'e'
     _CONECTOR_MOEDA = 'de'
+
+# ----------------
+# Exemplo de uso
+# ----------------
+
+if __name__ == "__main__":
+
+    valor = Decimal('983_121_613_112_832_531_086_112_215_155_136_123_456_789.12')
+   
+    vp = ValorPorExtenso()
+    vp.setValor(valor)
+
+    extenso = vp.get()
+    valor_formatado = f'\nR$ {valor:,.2f}\n'.replace(',', 'X').replace('.', ',').replace('X', '.')
+    
+    print(valor_formatado)
+    print(extenso, "\n")
+
+    # R$ 983.121.613.112.832.531.086.112.215.155.136.123.456.789,12
+    #
+    # Novecentos e Oitenta e Três Duodecilhões, Cento e Vinte e Um Undecilhões, Seiscentos e 
+    # Treze Decilhões, Cento e Doze Nonilhões, Oitocentos e Trinta e Dois Octilhões, Quinhentos e 
+    # Trinta e Um Septilhões, Oitenta e Seis Sextilhões, Cento e Doze Quintilhões, Duzentos e 
+    # Quinze Quatrilhões, Cento e Cinquenta e Cinco Trilhões, Cento e Trinta e Seis Bilhões, 
+    # Cento e Vinte e Três Milhões, Quatrocentos e Cinquenta e Seis Mil e Setecentos e Oitenta e
+    # Nove Reais e Doze Centavos
+    #
+
