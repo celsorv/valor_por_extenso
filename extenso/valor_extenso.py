@@ -61,6 +61,21 @@ class ValorPorExtenso:
         self.__valor_agrupado(valor)
 
 
+    def setMoeda(self, moeda: tuple[str, str], centavo: tuple[str, str]) -> None:
+        """
+        Define a moeda para o extenso
+        Args:
+            moeda: tupla com o nome singular e plural
+            centavo: tupla com o nome singular e plural
+        Return:
+            não há
+        """
+        self.__moeda = [
+            centavo if centavo is not None else ['', ''], 
+            moeda if moeda is not None else ['', '']
+        ]
+
+
 # ---------------
 # Private Methods
 # ---------------
@@ -92,7 +107,11 @@ class ValorPorExtenso:
 
         if extenso:
             posicao = ValorPorExtenso._PLURAL if classe_plural else ValorPorExtenso._SINGULAR
-            extenso += f' {ValorPorExtenso._CLASSES[indice_classe][posicao]}'
+            if indice_classe >= 2:
+                extenso += f' {ValorPorExtenso._CLASSES[indice_classe][posicao]}'
+            else:
+                if self.__moeda[indice_classe][posicao]:
+                    extenso += f' {self.__moeda[indice_classe][posicao]}'
 
         return extenso
 
@@ -101,17 +120,14 @@ class ValorPorExtenso:
         self.__pluralizar = None
         self.__decimais = None
         self.__inteiros = None
-        self.__valor = None
         self.__valor_ctl = None
+        self.__moeda = [ValorPorExtenso._CLASSES[1], ValorPorExtenso._CLASSES[0]]
 
 
     def __valor_agrupado(self, valor: (float, Decimal)) -> None:
         if not (valor and isinstance(valor, (int, float, Decimal))):
             raise ValueError('Parâmetro inválido para extenso')
-        # elif valor > 990_999_999_999_999_999_999_999:
-        #     raise ValueError('Valor excede o limite de 990.999.999.999.999.999.999')
 
-        self.__valor = valor
         self.__inteiros = int(valor)
         self.__decimais = f'{valor:031,.2f}'.split('.')[1]
         self.__valor_ctl = list(reversed(f'{self.__inteiros:031,d}'.split(',') + [f'0{self.__decimais}']))
@@ -133,8 +149,8 @@ class ValorPorExtenso:
     )
 
     _CLASSES = (
-        ('Centavo', 'Centavos', False),
         ('Real', 'Reais', False),
+        ('Centavo', 'Centavos', False),
         ('Mil', 'Mil', False),
         ('Milhão', 'Milhões', True),
         ('Bilhão', 'Bilhões', True),
@@ -155,30 +171,48 @@ class ValorPorExtenso:
     _CONECTOR = 'e'
     _CONECTOR_MOEDA = 'de'
 
-# ----------------
-# Exemplo de uso
-# ----------------
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     valor = Decimal('983_121_613_112_832_531_086_112_215_155_136_123_456_789.12')
-   
+    valor_formatado = f'\nR$ {valor:,.2f}\n'.replace(',', 'X').replace('.', ',').replace('X', '.')
     vp = ValorPorExtenso()
     vp.setValor(valor)
-
     extenso = vp.get()
-    valor_formatado = f'\nR$ {valor:,.2f}\n'.replace(',', 'X').replace('.', ',').replace('X', '.')
-    
     print(valor_formatado)
     print(extenso, "\n")
 
     # R$ 983.121.613.112.832.531.086.112.215.155.136.123.456.789,12
     #
-    # Novecentos e Oitenta e Três Duodecilhões, Cento e Vinte e Um Undecilhões, Seiscentos e 
-    # Treze Decilhões, Cento e Doze Nonilhões, Oitocentos e Trinta e Dois Octilhões, Quinhentos e 
-    # Trinta e Um Septilhões, Oitenta e Seis Sextilhões, Cento e Doze Quintilhões, Duzentos e 
-    # Quinze Quatrilhões, Cento e Cinquenta e Cinco Trilhões, Cento e Trinta e Seis Bilhões, 
-    # Cento e Vinte e Três Milhões, Quatrocentos e Cinquenta e Seis Mil e Setecentos e Oitenta e
-    # Nove Reais e Doze Centavos
-    #
+    # Novecentos e Oitenta e Três Duodecilhões, Cento e Vinte e Um Undecilhões, 
+    # Seiscentos e Treze Decilhões, Cento e Doze Nonilhões, Oitocentos e Trinta e 
+    # Dois Octilhões, Quinhentos e Trinta e Um Septilhões, Oitenta e Seis Sextilhões, 
+    # Cento e Doze Quintilhões, Duzentos e Quinze Quatrilhões, Cento e Cinquenta e 
+    # Cinco Trilhões, Cento e Trinta e Seis Bilhões, Cento e Vinte e Três Milhões, 
+    # Quatrocentos e Cinquenta e Seis Mil e Setecentos e Oitenta e Nove Reais e 
+    # Doze Centavos 
 
+
+    valor = 125.83
+    valor_formatado = f'\nUS$ {valor:.2f}\n'
+    vp.setValor(valor)
+    vp.setMoeda(['Dólar', 'Dólares'], ['Cent', 'Cents'])
+    extenso = vp.get()
+    print(valor_formatado)
+    print(extenso, "\n")
+
+    # US$ 125.83
+    # Cento e Vinte e Cinco Dólares e Oitenta e Três Cents 
+
+
+    valor = 28.45
+    valor_formatado = f'\n{valor:.2f}\n'
+    vp.setValor(valor)
+    vp.setMoeda(None, ['Centésimo', 'Centésimos'])
+    extenso = vp.get()
+    print(valor_formatado)
+    print(extenso, "\n")
+
+    # 28.45
+    # Vinte e Oito e Quarenta e Cinco Centésimos 
+    
