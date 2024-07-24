@@ -22,7 +22,6 @@ class ValorPorExtenso:
         for indice, grupo in enumerate(self.__valor_ctl[1:], 1):
             if grupo == '000': continue
 
-            posicao = ValorPorExtenso._PLURAL if int(grupo) > 1 else ValorPorExtenso._SINGULAR
             extenso_tmp = self.__extenso_classe(grupo, indice)
             if extenso:
                 if not usou_conector:
@@ -215,4 +214,3 @@ if __name__ == '__main__':
 
     # 28.45
     # Vinte e Oito e Quarenta e Cinco Centésimos 
-    
