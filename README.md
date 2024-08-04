@@ -49,6 +49,6 @@ print(extenso, "\n")
 
 ```
 
-## Updates
-### 2024, August
+### Updates
+#### 2024, August
 - New method allows you to configure the currency name
