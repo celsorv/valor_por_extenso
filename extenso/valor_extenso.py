@@ -1,12 +1,12 @@
 """
-Gera o extenso para um valor monetário
+Gera o extenso para um número
 
 ## Author: Celso R Vitorino
 ## Date  : October 01, 2022
 """
 from decimal import Decimal
 
-class ValorPorExtenso:
+class PorExtenso:
 
     def get(self) -> str:
         """
@@ -25,7 +25,7 @@ class ValorPorExtenso:
             extenso_tmp = self.__extenso_classe(grupo, indice)
             if extenso:
                 if not usou_conector:
-                    extenso_tmp += f' {ValorPorExtenso._CONECTOR} '
+                    extenso_tmp += f' {PorExtenso._CONECTOR} '
                     usou_conector = True
                 else:
                     extenso_tmp += ', '
@@ -33,17 +33,17 @@ class ValorPorExtenso:
             extenso = extenso_tmp + extenso
 
         if self.__valor_ctl[1] == '000' and self.__inteiros: # moeda
-            posicao = ValorPorExtenso._PLURAL
+            posicao = PorExtenso._PLURAL
 
             if self.__valor_ctl[2] == '000':
-                moeda = f' {ValorPorExtenso._CONECTOR_MOEDA} {ValorPorExtenso._CLASSES[1][posicao]}'
+                moeda = f' {PorExtenso._CONECTOR_MOEDA} {PorExtenso._CLASSES[1][posicao]}'
             else:
-                moeda = f' {ValorPorExtenso._CLASSES[1][posicao]}'
+                moeda = f' {PorExtenso._CLASSES[1][posicao]}'
             extenso += moeda
 
         if self.__valor_ctl[0] != '000': # centavos
             if extenso:
-                extenso += f' {ValorPorExtenso._CONECTOR} '
+                extenso += f' {PorExtenso._CONECTOR} '
             extenso += self.__extenso_classe(self.__valor_ctl[0], 0)
 
         return extenso
@@ -86,7 +86,7 @@ class ValorPorExtenso:
             case '000':
                 extenso = ''
             case '100':
-                extenso = ValorPorExtenso._CEM
+                extenso = PorExtenso._CEM
             case _:
                 extenso = ''
 
@@ -94,20 +94,20 @@ class ValorPorExtenso:
                     digito = valor[indice]
                     if digito == '0': continue
 
-                    if extenso: extenso += f' {ValorPorExtenso._CONECTOR} '
+                    if extenso: extenso += f' {PorExtenso._CONECTOR} '
 
                     if indice == 1 and digito == '1': # dezena de 10 a 19
                         posicao = int(valor[indice:]) - 10
-                        extenso += ValorPorExtenso._NUMEROS[3][posicao]
+                        extenso += PorExtenso._NUMEROS[3][posicao]
                         break
 
                     posicao = int(digito)
-                    extenso += ValorPorExtenso._NUMEROS[indice][posicao]
+                    extenso += PorExtenso._NUMEROS[indice][posicao]
 
         if extenso:
-            posicao = ValorPorExtenso._PLURAL if classe_plural else ValorPorExtenso._SINGULAR
+            posicao = PorExtenso._PLURAL if classe_plural else PorExtenso._SINGULAR
             if indice_classe >= 2:
-                extenso += f' {ValorPorExtenso._CLASSES[indice_classe][posicao]}'
+                extenso += f' {PorExtenso._CLASSES[indice_classe][posicao]}'
             else:
                 if self.__moeda[indice_classe][posicao]:
                     extenso += f' {self.__moeda[indice_classe][posicao]}'
@@ -120,7 +120,7 @@ class ValorPorExtenso:
         self.__decimais = None
         self.__inteiros = None
         self.__valor_ctl = None
-        self.__moeda = [ValorPorExtenso._CLASSES[1], ValorPorExtenso._CLASSES[0]]
+        self.__moeda = [PorExtenso._CLASSES[1], PorExtenso._CLASSES[0]]
 
 
     def __valor_agrupado(self, valor: (float, Decimal)) -> None:
@@ -173,9 +173,10 @@ class ValorPorExtenso:
 
 if __name__ == '__main__':
 
+    vp = PorExtenso()
+
     valor = Decimal('983_121_613_112_832_531_086_112_215_155_136_123_456_789.12')
     valor_formatado = f'\nR$ {valor:,.2f}\n'.replace(',', 'X').replace('.', ',').replace('X', '.')
-    vp = ValorPorExtenso()
     vp.setValor(valor)
     extenso = vp.get()
     print(valor_formatado)
@@ -191,7 +192,6 @@ if __name__ == '__main__':
     # Quatrocentos e Cinquenta e Seis Mil e Setecentos e Oitenta e Nove Reais e 
     # Doze Centavos 
 
-
     valor = 125.83
     valor_formatado = f'\nUS$ {valor:.2f}\n'
     vp.setValor(valor)
@@ -203,14 +203,37 @@ if __name__ == '__main__':
     # US$ 125.83
     # Cento e Vinte e Cinco Dólares e Oitenta e Três Cents 
 
+    # ------------------------------------
+    # Puzzle Bitcoin key 66
+    # ------------------------------------
+    min_private_key = 0x20000000000000000
+    max_private_key = 0x3ffffffffffffffff
 
-    valor = 28.45
-    valor_formatado = f'\n{valor:.2f}\n'
+    # 36.893.488.147.419.103.232
+    # ---
+    # Trinta e Seis Quintilhões, Oitocentos e Noventa e Três Quatrilhões, 
+    # Quatrocentos e Oitenta e Oito Trilhões, Cento e Quarenta e Sete Bilhões, 
+    # Quatrocentos e Dezenove Milhões, Cento e Três Mil e Duzentos e Trinta e Dois 
+
+    # ------------------------------------
+    # Puzzle Bitcoin key 130
+    # ------------------------------------
+    min_private_key = 0x200000000000000000000000000000000
+    max_private_key = 0x3ffffffffffffffffffffffffffffffff
+
+    # 680.564.733.841.876.926.926.749.214.863.536.422.912
+    # ---
+    # Seiscentos e Oitenta Undecilhões, Quinhentos e Sessenta e Quatro Decilhões, 
+    # Setecentos e Trinta e Três Nonilhões, Oitocentos e Quarenta e Um Octilhões, 
+    # Oitocentos e Setenta e Seis Septilhões, Novecentos e Vinte e Seis Sextilhões, 
+    # Novecentos e Vinte e Seis Quintilhões, Setecentos e Quarenta e Nove Quatrilhões, 
+    # Duzentos e Quatorze Trilhões, Oitocentos e Sessenta e Três Bilhões, Quinhentos e 
+    # Trinta e Seis Milhões, Quatrocentos e Vinte e Dois Mil e Novecentos e Doze 
+
+    valor = max_private_key - min_private_key + 1
+    valor_formatado = f'\n{valor:,.0f}\n'.replace(',', 'X').replace('.', ',').replace('X', '.')
     vp.setValor(valor)
-    vp.setMoeda(None, ['Centésimo', 'Centésimos'])
+    vp.setMoeda(None, None)
     extenso = vp.get()
     print(valor_formatado)
     print(extenso, "\n")
-
-    # 28.45
-    # Vinte e Oito e Quarenta e Cinco Centésimos 
