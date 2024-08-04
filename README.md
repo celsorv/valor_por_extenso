@@ -2,7 +2,7 @@
 ## Classe em Python que produz o extenso de um valor monetário
 _Python class to write a currency value in full form_
 
-This is a Python script that defines a ValorPorExtenso class that can convert a monetary value (in float or Decimal format) to its corresponding text representation in Brazilian Portuguese.
+This is a Python script that defines a PorExtenso class that can convert a monetary value (in float or Decimal format) to its corresponding text representation in Brazilian Portuguese.
 
 The class has a setValor method that takes a monetary value as input, and a get method that returns the text representation of the input value. The script defines several private helper methods used to perform the conversion, such as __valor_agrupado, __extenso_classe, etc.
 
@@ -48,3 +48,7 @@ print(extenso, "\n")
 # Cento e Vinte e Cinco Dólares e Oitenta e Três Cents 
 
 ```
+
+## Updates
+### 2024, August
+- New method allows you to configure the currency name
