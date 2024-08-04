@@ -15,34 +15,36 @@ The script uses several class properties (such as _NUMEROS, _CONECTOR, _CLASSES,
 ```python
 
 from decimal import Decimal
-from valor_extenso import ValorPorExtenso
+from valor_extenso import PorExtenso
 
-valores = (8_746_102_001.13, 5_000_000.99, 12_105.00, 1_000_000_000.00, 0.01, 0.28, 12_104_100.35)
-extenso = ValorPorExtenso()
+vp = PorExtenso()
 
-for valor in valores:
-	extenso.setValor(valor)
-	print()
-	print(f'{valor:17,.2f}: {extenso.get()}')
+valor = Decimal('983_121_613_112_832_531_086_112_215_155_136_123_456_789.12')
+valor_formatado = f'\nR$ {valor:,.2f}\n'.replace(',', 'X').replace('.', ',').replace('X', '.')
+vp.setValor(valor)
+extenso = vp.get()
+print(valor_formatado)
+print(extenso, "\n")
 
-print()
+# R$ 983.121.613.112.832.531.086.112.215.155.136.123.456.789,12
+#
+# Novecentos e Oitenta e Três Duodecilhões, Cento e Vinte e Um Undecilhões, 
+# Seiscentos e Treze Decilhões, Cento e Doze Nonilhões, Oitocentos e Trinta e 
+# Dois Octilhões, Quinhentos e Trinta e Um Septilhões, Oitenta e Seis Sextilhões, 
+# Cento e Doze Quintilhões, Duzentos e Quinze Quatrilhões, Cento e Cinquenta e 
+# Cinco Trilhões, Cento e Trinta e Seis Bilhões, Cento e Vinte e Três Milhões, 
+# Quatrocentos e Cinquenta e Seis Mil e Setecentos e Oitenta e Nove Reais e 
+# Doze Centavos 
 
-"""
-Output:
+valor = 125.83
+valor_formatado = f'\nUS$ {valor:.2f}\n'
+vp.setValor(valor)
+vp.setMoeda(['Dólar', 'Dólares'], ['Cent', 'Cents'])
+extenso = vp.get()
+print(valor_formatado)
+print(extenso, "\n")
 
- 8,746,102,001.13: Oito Bilhões, Setecentos e Quarenta e Seis Milhões, Cento e Dois Mil e Um Reais e Treze Centavos
+# US$ 125.83
+# Cento e Vinte e Cinco Dólares e Oitenta e Três Cents 
 
-     5,000,000.99: Cinco Milhões de Reais e Noventa e Nove Centavos
-
-        12,105.00: Doze Mil e Cento e Cinco Reais
-
- 1,000,000,000.00: Um Bilhão de Reais
-
-             0.01: Um Centavo
-
-             0.28: Vinte e Oito Centavos
-
-    12,104,100.35: Doze Milhões, Cento e Quatro Mil e Cem Reais e Trinta e Cinco Centavos
-
-"""
 ```
